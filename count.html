@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Simon Game</title>
+<style>html {
+    font-family: "Open Sans", "Times New Roman", "Arial";
+    font-size: 14px;
+}
+
+body {
+    background: darkseagreen;
+    color: white;
+    margin: 0;
+}
+
+button {
+    padding: 20px;
+    border: 0;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+@media screen and (max-width: 480px) {
+    button {
+        min-width: 50px;
+    }
+}
+
+button sub {
+    display: block;
+    font-size: 10px;
+    padding-top: 5px;
+    font-style: italic;
+}
+
+.hide {
+    display: none !important;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.no-click {
+    pointer-events: none;
+}
+
+.grid-container {
+    display: grid;
+}
+
+.body-wrapper.grid-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    font-family: 'Bad Script', cursive;
+}
+
+.body-wrapper header {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.body-wrapper main {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.control-wrapper.grid-container {
+    display: block;
+}
+
+.control-hide {
+    display: none !important;
+}
+
+.control-show {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+}
+
+.button-wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+    padding-bottom: 20px;
+}
+
+@media screen and (max-width: 480px) {
+    .button-wrapper {
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+    }
+}
+
+.playmode-wrapper {
+    padding-bottom: 20px;
+}
+
+.playmode-choice {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.playmode-choice button:nth-child(odd) {
+    margin-bottom: 15px;
+}
+
+#feedback {
+    font-size: 1.5em;
+    padding-bottom: 10px;
+}
+
+#start {
+    background: #4eae69;
+}
+
+#reset {
+    background: #FF851B;
+}
+
+#playercounter {
+    background: lightskyblue;
+}
+
+#selection h2 {
+    padding-bottom: 25px;
+}
+
+.selection-wrapper.grid-container {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.selection-wrapper.choice-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+@media screen and (max-width: 480px) {
+    .selection-wrapper.choice-grid {
+        grid-gap: 0.5em;
+    }
+}
+
+.selection-wrapper.game-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+#selection .preselection img:hover {
+    background: #4eae69;
+}
+
+.animal img {
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+    .animal img {
+        width: 100px;
+    }
+}
+
+.active {
+    background: #4eae69 !important;
+}
+
+.inactive {
+    background: grey !important;
+    cursor: not-allowed;
+}
+
+.highlight {
+    background: #ffeb3b !important;
+    -webkit-box-shadow: 0 0 30px white;
+    box-shadow: 0 0 30px white;
+}
+
+.gold {
+    background: gold;
+}
+
+.pink {
+    background: pink;
+}
+
+.mediumpurple {
+    background: mediumpurple;
+}
+
+.brown {
+    background: brown;
+}
+
+.cornflowerblue {
+    background: cornflowerblue;
+}
+
+.orangered {
+    background: orangered;
+}
+
+.darkgrey {
+    background: darkgrey;
+}
+
+.orange {
+    background: orange;
+}
+
+.white {
+    background: white;
+}
+
+.yellowgreen {
+    background: yellowgreen;
+}
+
+.saddlebrown {
+    background: saddlebrown;
+}
+
+.darkolivegreen {
+    background: darkolivegreen;
+}
+
+.darkgoldenrod {
+    background: darkgoldenrod;
+}
+
+.nobg {
+    background: none;
+}
+
+.error {
+    background: red;
+}
+
+.screen {
+    position: absolute;
+    height: 300px;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    -webkit-box-pack: space-evenly;
+    justify-content: space-evenly;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    -webkit-transition: -webkit-transform 0.4s;
+    transition: -webkit-transform 0.4s;
+    transition: transform 0.4s;
+    transition: transform 0.4s, -webkit-transform 0.4s;
+}
+
+@media screen and (max-width: 480px) {
+    .screen {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+}
+
+.gameover, .win {
+    font-size: 30px;
+    color: white;
+}
+
+.screen button {
+    height: 80px;
+    width: 200px;
+}
+
+.gameover button.playagain, .win button.playagain {
+    background: #FF851B;
+}
+
+.confirm-choice button.rechoose {
+    background: #FF851B;
+}
+
+.confirm-choice button.play.normal {
+    background: #4eae69;
+}
+
+.confirm-choice button.play.hard {
+    background: purple;
+}
+
+.confirm-choice-show, .gameover-show, .win-show {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+.confirm-choice-hide, .game-over-hide, .win-hide {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}</style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+
+    <title>A Simon Game For Children</title>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="animalgame.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Bad+Script" rel="stylesheet">
+</head>
+<body>
+    <div class="body-wrapper grid-container">
+        <header><h1>Balmores Count Game</h1></header>
+        <main>
+            <div class="control-wrapper grid-container control-hide" id="control">
+                <h2>Repeat the animals in the correct order. Each round a random animal gets added. You need 20 animals to win.</h2>
+                <div class="playmode-wrapper">
+                    <div class="playmode-normal hide">You play normal mode: <span class="playmode-counter">3</span> attempts.</div>
+                    <div class="playmode-hard hide">You play hard mode: <span class="playmode-counter">1</span> attempt.</div>    
+                </div>
+                <div class="button-wrapper">
+                    <button id="reset">Reset</button>
+                    <button id="playercounter" class="inactive"></button>
+                    <button id="start">Start</button>
+                </div>
+                <div id="feedback" class="hidden">&nbsp;</div>
+            </div>
+            <section id="selection">
+                <h2>Please choose <span id="countleft"></span> animal(s) to play with</h2>    
+                <div class="selection-wrapper grid-container choice-grid">
+                    <div class="animal preselection" id="lion">
+                        <img src="//www.google.com/logos/fnbx/animal_sounds/lion.png" class="gold nobg">
+                        <audio src="//www.google.com/logos/fnbx/animal_sounds/lion.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="raccoon">
+                        <img src="//www.google.com/logos/fnbx/animal_sounds/raccoon.png" class="mediumpurple nobg">
+                        <audio src="//www.google.com/logos/fnbx/animal_sounds/raccoon.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="whale">
+                        <img src="//www.google.com/logos/fnbx/animal_sounds/humpback-whale.png" class="cornflowerblue nobg">
+                        <audio src="//www.google.com/logos/fnbx/animal_sounds/humpback-whale.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="pig">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/pig.png" class="pink nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/pig.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="duck">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/duck.png" class="brown nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/duck.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="moose">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/moose.png" class="orangered nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/moose.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="cow">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/cow.png" class="white nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/cow.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="cat">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/cat.png" class="orange nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/cat.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="elephant">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/elephant.png" class="darkgrey nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/elephant.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="owl">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/owl.png" class="saddlebrown nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/owl.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="zebra">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/zebra.png" class="darkolivegreen nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/zebra.mp3" preload></audio>
+                    </div>
+                    <div class="animal preselection" id="tiger">
+                          <img src="//www.google.com/logos/fnbx/animal_sounds/tiger.png" class="darkgoldenrod nobg">
+                          <audio src="//www.google.com/logos/fnbx/animal_sounds/tiger.mp3" preload></audio>
+                    </div>
+                </div>
+                <div class="confirm-choice screen">
+                    <button class="rechoose">Choose Again</button>
+                    <div class="playmode-choice">
+                        <button class="play normal" data-playtype="normal">Play Normal<sub>3 attempts</sub></button>
+                        <button class="play hard" data-playtype="hard">Play Hard<sub>1 attempt</sub></button>
+                    </div>
+                </div>
+                <div class="gameover screen">
+                    <p>Oh-Oh. This was not the correct order.</p>
+                    <button class="playagain">Play again</button>
+                </div>
+                <div class="win screen">
+                    <p>Congratulations. You Win!</p>
+                    <button class="playagain">Play again</button>
+                </div> 
+           </section>
+        </main>
+    </div>
+    
+    <!-- custom Javascript -->
+    <script src="animalgame.js"></script>
+
+</body>
+</html>
+<!-- partial -->
+  <script>// vanilla javascript document ready equivalent
+var ready = function ( fn ) {
+    if ( typeof fn !== 'function' ) return;
+    if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
+        return fn();
+    }
+    document.addEventListener( 'DOMContentLoaded', fn, false );
+};
+
+ready(function() {
+    // all variables that need to be global accessible
+    let $QSA = (elem) => document.querySelectorAll(elem),
+        $QS = (elem) => document.querySelector(elem),
+        $ID = (elem) => document.getElementById(elem),
+        $Arr = (elem) => Array.from(elem),
+        animalCounter,
+        chosenAnimals = [],
+        animalsArr = [],
+        feedback = [
+            "Good. Next round.",
+            "Yeah. Next round.",
+            "Keep going. Next round.",
+            "Good job. Next round.",
+            "Hurra. Next round.",
+            "Super. Next round.",
+            "Well done. Next round.",
+            "You rock. Next round."            
+        ],
+        playerCounter,
+        attempts,
+        moveCounter,
+        lastRandomNum;
+    
+    // start
+    init();
+    
+    function init() {
+        animalCounter = 4;
+        playerCounter = 0;
+        $ID("countleft").innerText = animalCounter;
+        $ID("playercounter").innerText = playerCounter;
+        $QSA("#selection .animal").forEach(elem => elem.addEventListener("click", selectAnimal, false));
+    };
+    
+    // HELPER FUNCTIONS
+    // get random integer within range min max INCLUDING max and OPTIONAL WITHOUT same number twice in a row (repeat)
+    function getRandomInt(min, max, repeat) {
+        let num = Math.floor(Math.random() * (max - min + 1)) + min;
+        if(repeat) {
+            return num;
+        } else {
+            return num !== lastRandomNum ? num : getRandomInt(min, max);
+        }
+    }
+    
+    // --- CHOOSE INTRO --- User needs to select 4 animals to play with
+    function selectAnimal() {
+        let animal = this.querySelector("img");
+        // enable deselection of a selected animal 
+        if(animal.classList.contains("active")) {
+            animal.classList.remove("active");
+            animalCounter++;
+            $ID("countleft").innerText = animalCounter;
+        }
+        // select animal
+        else {
+            animal.classList.add("active");
+            this.querySelector("audio").play();
+            animalCounter--
+            $ID("countleft").innerText = animalCounter;
+            // if 4 animals have been chosen
+            if(animalCounter === 0) {
+                $QSA("#selection .animal").forEach(elem => elem.removeEventListener("click", selectAnimal, false));
+                // give user option to redo choice or play
+                $QSA(".confirm-choice").forEach(elem => {
+                    elem.classList.remove("confirm-choice-hide");
+                    elem.classList.add("confirm-choice-show");
+                });
+                // choice = rechoose
+                $QS(".confirm-choice .rechoose").addEventListener("click", function rechoose() {
+                    $QSA(".confirm-choice").forEach(elem => {
+                        elem.classList.remove("confirm-choice-show");
+                        elem.classList.add("confirm-choice-hide");
+                    });
+                    $QSA("#selection .animal img").forEach(elem => elem.classList.remove("active"));
+                    init();
+                });
+                // choice = play
+                $QSA(".confirm-choice .play").forEach(elem => elem.addEventListener("click", function() {
+                    
+                    // find out which mode is played
+                    let playmode = this.getAttribute("data-playtype");
+                    if(playmode === "normal") {
+                        $QS(".playmode-normal").classList.remove("hide");
+                        attempts = 3;
+                    } else {
+                        $QS(".playmode-hard").classList.remove("hide");
+                        attempts = 1;
+                    }
+                    
+                    // necessary to check because function can get added multiple times
+                    if(chosenAnimals.length === 0) {
+                        $Arr($QSA("#selection .animal")).filter(item => {
+                            if(item.querySelector("img").classList.contains("active")) {
+                                chosenAnimals.push(item.id);   
+                            } else {
+                                item.remove();
+                            }
+                        });
+                        
+                        // stylings that needed to be adjusted for the game start
+                        $QS(".confirm-choice").classList.remove("confirm-choice-show");
+                        
+                        $QS("#selection h2").classList.add("hide");
+                        
+                        $QSA("#selection .animal").forEach(elem => {
+                            elem.querySelector("img").classList.remove("active");
+                            elem.classList.remove("preselection");
+                            elem.removeEventListener("click", selectAnimal)
+                        });
+                        
+                        $QSA(".selection-wrapper").forEach(elem => {
+                            elem.classList.remove("choice-grid");
+                            elem.classList.add("game-grid");
+                        });
+                        
+                        $QSA("#control").forEach(elem => {
+                            elem.classList.remove("control-hide");
+                            elem.classList.add("control-show");
+                        });
+                                                 
+                        $ID("start").addEventListener("click", startGame, false);
+                        $ID("reset").addEventListener("click", reset, false);
+                        $QSA(".selection-wrapper .animal").forEach(elem => {
+                            elem.addEventListener("click", function() {
+                                playerMove.call(this);
+                            });   
+                        });
+                        // attach reset func
+                        $QSA(".playagain").forEach(elem => elem.addEventListener("click", reset, false));    
+                    }
+                }));
+            }
+        }    
+    }
+    
+    
+    // ---- GAMEPLAY --- GAME
+    
+    function startGame() {
+        $ID("start").removeEventListener("click", startGame, false);
+        $ID("start").classList.add("inactive");
+        $ID("playercounter").classList.remove("inactive");
+        $ID("playercounter").innerText = ++playerCounter;
+        computerAddMove();
+    }
+    
+    function reset() {
+        window.location.href = window.location.href;
+    }
+    
+    function getRandomFeedback() {
+        let feedbackLength = feedback.length - 1,
+            randomNum = getRandomInt(0, feedbackLength, true);
+        $QSA("#feedback").forEach(elem => {
+            elem.innerText = feedback[randomNum];
+            elem.classList.remove("hidden");
+        });
+        $ID("playercounter").classList.add("highlight");
+        setTimeout(() => {
+            $ID("playercounter").classList.remove("highlight");
+        }, 1500);
+    }
+    
+    function notify(text) {
+        $ID("feedback").classList.remove("hidden");
+        $ID("feedback").innerText = text;
+        setTimeout(() => {
+            $ID("feedback").classList.add("hidden");
+        }, 1000);
+    }
+    
+    function computerAddMove() {
+        let randomNum = getRandomInt(0, 3, false),
+            randomAnimal = chosenAnimals[randomNum];
+            lastRandomNum = randomNum; // update outer num to to avoid same num twice
+            animalsArr.push(randomAnimal);
+            computerReplayMoves();
+    }
+    
+    function computerReplayMoves() {
+        let i = 0,
+            showAnimal = () => {
+                return setTimeout(() => {
+                    if(i < animalsArr.length) {
+                        $ID(animalsArr[i]).querySelector("audio").play();
+                        $ID(animalsArr[i]).querySelector("img").classList.remove("nobg");
+                        ++i;
+                        hideAnimal();
+                    } 
+                    else {
+                        notify("Your turn.")
+                        // re-enable user clicking
+                        $QSA(".selection-wrapper .animal").forEach(elem => elem.classList.remove("no-click"));
+                    }
+                }, 1000)
+            },
+            hideAnimal = () => {
+                return setTimeout(() => {
+                    $ID(animalsArr[i-1]).querySelector("img").classList.add("nobg");
+                    showAnimal();
+                }, 1000);
+            };
+        
+        // start
+        showAnimal();
+        // reset move counter
+        moveCounter = 0;
+        // prevent user clicking
+        $QSA(".selection-wrapper .animal").forEach(elem => elem.classList.add("no-click"));
+    }
+    
+    function playerMove() {
+        let animalsArrLength = animalsArr.length;
+
+        // user repeats all animals in the same order
+        if(moveCounter < animalsArrLength) {
+            if(this.id === animalsArr[moveCounter]) {
+                this.querySelector("audio").play();
+                this.querySelector("img").classList.remove("nobg");
+                moveCounter++;
+                setTimeout(() => {
+                    this.querySelector("img").classList.add("nobg");
+                }, 1000);
+            }
+            // if user makes a mistake
+            else {
+                notify("Wrong animal.")
+                // prevent user clicking
+                $QSA(".selection-wrapper .animal").forEach(elem => elem.classList.add("no-click"));
+                // add error class to the wrongly clicked animal
+                this.querySelector("img").classList.add("error");
+                // show which animal would have been correct
+                $ID(animalsArr[moveCounter]).querySelector("img").classList.remove("nobg");
+                setTimeout(() => {
+                    this.querySelector("img").classList.remove("error");
+                    $ID(animalsArr[moveCounter]).querySelector("img").classList.add("nobg");
+                }, 1000);
+                // deduct attempt
+                $QS(".playmode-counter").innerText = --attempts;
+                // based on the amount of attempts game continues or game over
+                if(attempts > 0) {
+                    setTimeout(() => {
+                        notify("Once again.");
+                    }, 1000);
+                    setTimeout(() => {
+                        computerReplayMoves();
+                    }, 2000);
+                } 
+                else {
+                    // show gameover popup
+                    $QS(".gameover").classList.add("gameover-show");
+                }
+            }
+            // if all animals are repeated in the correct order
+            if(moveCounter === animalsArrLength) {
+                // win if level 20 is reached
+                if(playerCounter === 20) {
+                    $QS(".win").classList.add("win-show");
+                } else {
+                    $ID("playercounter").innerText = ++playerCounter;
+                    getRandomFeedback();
+                    setTimeout(() => {
+                        $ID("feedback").classList.add("hidden");
+                    }, 1500);  
+                    setTimeout(() => {
+                        computerAddMove();
+                    }, 2000);   
+                } 
+            }
+        }
+    }
+    
+// end document ready
+});</script>
+
+</body>
+</html>
